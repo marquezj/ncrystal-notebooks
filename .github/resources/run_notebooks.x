@@ -4,6 +4,19 @@ export REPOROOT="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )"
 CODCACHE_SRC="${REPOROOT}/.github/resources/codcache"
 test -d $CODCACHE_SRC
 
+export LOCALWHEELCACHE="$REPOROOT/tmptests/local_wheel_cache"
+if [ "x${NCNOTEBOOKS_USE_NCRYSTAL_REPO:-}" != "x" ]; then
+    python3 -mvenv create "$REPOROOT/tmptests/venv_ncbld"
+    . "$REPOROOT/tmptests/venv_ncbld/bin/activate"
+    mkdir "$LOCALWHEELCACHE"
+    python -mpip install build
+    time python -m build --wheel -o "$LOCALWHEELCACHE" "${NCNOTEBOOKS_USE_NCRYSTAL_REPO}/ncrystal_core"
+    time python -m build --wheel -o "$LOCALWHEELCACHE" "${NCNOTEBOOKS_USE_NCRYSTAL_REPO}/ncrystal_python"
+    time python -m build --wheel -o "$LOCALWHEELCACHE" "${NCNOTEBOOKS_USE_NCRYSTAL_REPO}/ncrystal_metapkg"
+    ls -l "$LOCALWHEELCACHE"
+    deactivate
+fi
+
 for notebookfile in `find "${REPOROOT}"/notebooks/ -name '*.ipynb'`; do
     echo
     echo '------------------------------------------------------'
@@ -19,18 +32,9 @@ for notebookfile in `find "${REPOROOT}"/notebooks/ -name '*.ipynb'`; do
     cp -rp "${CODCACHE_SRC}" ./ncrystal_onlinedb_filecache
     python3 -mvenv create ./venv
     . ./venv/bin/activate
-
-    if [ "x${NCNOTEBOOKS_USE_NCRYSTAL_REPO:-}" != "x" ]; then
-        time python3 -m pip install "${NCNOTEBOOKS_USE_NCRYSTAL_REPO}/ncrystal_core"
-        python3 -m pip install "${NCNOTEBOOKS_USE_NCRYSTAL_REPO}/ncrystal_python"
-        python3 -m pip install "${NCNOTEBOOKS_USE_NCRYSTAL_REPO}/ncrystal_metapkg"
+    if [ -d "$LOCALWHEELCACHE" ]; then
+        export PIP_FIND_LINKS="$LOCALWHEELCACHE"
     fi
-
-    #Workaround for https://github.com/spglib/spglib/issues/553 :
-    #TMPPYVER=$(python3 -c 'import sys; print("%i.%i"%sys.version_info[0:2])')
-    #if [ "${TMPPYVER}" == "3.13" ]; then
-    #   python3 -mpip install git+https://github.com/tkittel/spglib.git
-    #fi
 
     python3 -mpip install jupyter ipython
     echo "   .. converting to script"
