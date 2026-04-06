@@ -20,7 +20,7 @@ Python notebooks with examples, documentation, and tutorials for usage of NCryst
   <a target="_blank" href="https://colab.research.google.com/github/mctools/ncrystal-notebooks/blob/main/notebooks/ncrystal1_basic_03_Scatter_patterns_with_the_builtin_MiniMC_framework.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
   </a>
-  * Here we discuss how to generate simple scattering patterns using the builtin "MiniMC" framework, including effects of geometry and multiple scattering.
+  * Here we discuss how to easily study effects of geometry and multiple scattering using the builtin "MiniMC" framework.
 * [Using NCrystal as a backend for full-fledged Monte Carlo simulations](notebooks/ncrystal1_basic_04_NCrystal_as_backend_for_third_party_apps.ipynb)
   <a target="_blank" href="https://colab.research.google.com/github/mctools/ncrystal-notebooks/blob/main/notebooks/ncrystal1_basic_04_NCrystal_as_backend_for_third_party_apps.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
